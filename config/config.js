@@ -1,17 +1,10 @@
-//configuracion para la conexion a la base de datos de pgsql
-const promise = require('bluebird');
+// Importar la biblioteca dotenv y cargar las variables de entorno desde el archivo .env
 require('dotenv').config();
-const options = {
-    promiseLib: promise,
-    query: (e) => { }
-}
 
-const pgp = require('pg-promise')(options);
-const types = pgp.pg.types;
-types.setTypeParser(1114, function (stringValue) {
-    return stringValue
-});
+const promise = require('bluebird');
+const pgp = require('pg-promise')({ promiseLib: promise });
 
+// Obtener la URL de conexión desde la variable de entorno
 const connectionString = process.env.DATABASE_URL;
 
 const db = pgp(connectionString);
