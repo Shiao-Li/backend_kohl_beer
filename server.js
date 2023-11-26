@@ -25,8 +25,8 @@ app.set("port", port);
 //Llamando a las rutas
 users(app);
 
-server.listen(3000,"localhost", function () {
-  console.log("Apliacion de nodejs " + port + " iniciada...");
+app.listen(app.get('port'), () => {
+  console.log(`Server ok on http://localhost:${app.get('port')}`);
 });
 
 //error handler
