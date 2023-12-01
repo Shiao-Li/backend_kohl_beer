@@ -5,4 +5,6 @@ module.exports = (app) => {
     app.get('/api/users/getAll', UsersController.getAll);
     //crear datos
     app.post('/api/users/create', UsersController.register)
+    //login
+    app.post('/api/users/login', UsersController.login);
 }
