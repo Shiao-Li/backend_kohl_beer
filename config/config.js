@@ -1,22 +1,22 @@
-// Configuración para la conexión a la base de datos de pgsql
+//configuracion para la conexion a la base de datos de pgsql
 const promise = require('bluebird');
-require('dotenv').config();
-const pgp = require('pg-promise')({
+const options = {
     promiseLib: promise,
     query: (e) => { }
-});
+}
 
+const pgp = require('pg-promise')(options);
 const types = pgp.pg.types;
 types.setTypeParser(1114, function (stringValue) {
-    return stringValue;
+    return stringValue
 });
 
-const connectionString = process.env.DATABASE_URL;
-const sslOptions = { rejectUnauthorized: false };
+const databaseConfig = {
+    'host': '127.0.0.1',
+    'port': 5432,
+    'database': 'delivery_db',
+    'user': 'postgres',
+    'password': '123'
+};
 
-const db = pgp({
-    connectionString: connectionString,
-    ssl: sslOptions
-});
-
-module.exports = db;
+const db = pgp(databaseConfig);
