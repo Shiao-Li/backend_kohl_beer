@@ -7,11 +7,11 @@ const uuid = uuidv4();
 
 
 const storage = new Storage({
-    projectId: "delivery-kohl",
+    projectId: "app-kohl",
     keyFilename: '../serviceAccountKey.json'
 });
 
-const bucket = storage.bucket("gs://delivery-app-udemy.appspot.com/"); //cambiar la ruta
+const bucket = storage.bucket("gs://app-kohl.appspot.com/"); 
 
 /**
  * Subir el archivo a Firebase Storage
@@ -22,22 +22,19 @@ module.exports = (file, pathImage, deletePathImage) => {
         
         console.log('delete path', deletePathImage)
         if (deletePathImage) {
-
             if (deletePathImage != null || deletePathImage != undefined) {
-                const parseDeletePathImage = url.parse(deletePathImage)
-                var ulrDelete = parseDeletePathImage.pathname.slice(23);
-                const fileDelete = bucket.file(`${ulrDelete}`)
+                const parsedDeletePathImage = new URL(deletePathImage);
+                const ulrDelete = parsedDeletePathImage.pathname.slice(23);
+                const fileDelete = bucket.file(`${ulrDelete}`);
 
                 fileDelete.delete().then((imageDelete) => {
-
-                    console.log('se borro la imagen con exito')
-                }).catch(err => {
-                    console.log('Failed to remove photo, error:', err)
+                    console.log('se borro la imagen con exito');
+                })
+                .catch(err => {
+                    console.log('Failed to remove photo, error:', err);
                 });
-
             }
         }
-
 
         if (pathImage) {
             if (pathImage != null || pathImage != undefined) {
