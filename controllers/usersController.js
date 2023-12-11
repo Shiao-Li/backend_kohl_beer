@@ -28,7 +28,7 @@ module.exports = {
 
             return res.status(201).json({
                 success: true,
-                message: 'Perfecto ya te registraste, ahora inicia sesión',
+                message: '¡Registro exitoso! Inicia sesión para continuar.',
                 data: data.id
             })
         } catch (error) {
@@ -63,7 +63,7 @@ module.exports = {
 
             return res.status(201).json({
                 success: true,
-                message: 'Perfecto ya te registraste, ahora inicia sesión',
+                message: '¡Registro exitoso! Inicia sesión para continuar.',
                 data: data.id
             });
 
@@ -73,7 +73,7 @@ module.exports = {
             return res.status(501).json({
                 success: false,
                 message: 'Error al registrar el usuario',
-                error: error
+                error: error.message
             });
         }
     },
