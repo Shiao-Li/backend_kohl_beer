@@ -6,6 +6,8 @@ module.exports = (app, upload) => {
     
     //crear datos, con imagen del usuario
     app.post('/api/users/create', upload.array('image', 1), UsersController.registerWithImage);
+    // app.post('/api/users/create', upload.array('image', 1), UsersController.register);
+
     //login
     app.post('/api/users/login', UsersController.login);
 }
