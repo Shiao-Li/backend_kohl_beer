@@ -42,13 +42,13 @@ module.exports = {
     },
     async registerWithImage(req, res, next) { // REGISTRO CON IMAGEN
         try {
-            
-            const user = JSON.parse(req.body.user);
-            console.log(`Datos enviados del usuario: ${user}`);
+
+            const user = req.body.user;
+            console.log('Datos enviados del usuario:', user);
 
             const files = req.files;
 
-            if (files.length > 0) {
+            if (files && Array.isArray(files) && files.length > 0) {
                 const pathImage = `image_${Date.now()}`; // NOMBRE DEL ARCHIVO
                 const url = await storage(files[0], pathImage);
 
@@ -67,7 +67,7 @@ module.exports = {
                 data: data.id
             });
 
-        } 
+        }
         catch (error) {
             console.log(`Error: ${error}`);
             return res.status(501).json({
