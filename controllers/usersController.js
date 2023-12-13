@@ -6,6 +6,7 @@ const keys = require('../config/keys');
 const storage = require('../utils/cloud_storage');
 
 module.exports = {
+    // FUNCION VER USUARIOS
     async getAll(req, res, next) {
         try {
             const data = await User.getAll();
@@ -19,32 +20,29 @@ module.exports = {
             });
         }
     },
-    async register(req, res, next) { // REGISTRO SOLO DATOS
+    // FUNCION VER USUARIO POR ID
+    async findById(req, res, next) {
         try {
-            const user = req.body;
-            const data = await User.create(user);
+            const id = req.params.id;
 
-            await Rol.create(data.id, 1); // ROL POR DEFECTO (CLIENTE)
-
-            return res.status(201).json({
-                success: true,
-                message: '¡Registro exitoso! Inicia sesión para continuar.',
-                data: data.id
-            })
-        } catch (error) {
+            const data = await User.findByUserId(id);
+            console.log(`Usuario: ${data}`);
+            return res.status(201).json(data);
+        }
+        catch (error) {
             console.log(`Error: ${error}`);
             return res.status(501).json({
                 success: false,
-                message: 'Error al registrar el usuario',
-                error: error
+                message: 'Error al obtener el usuario por ID'
             });
         }
     },
-    async registerWithImage(req, res, next) { // REGISTRO CON IMAGEN
+    // FUNCION REGISTRAR USUARIO CON FOTO
+    async registerWithImage(req, res, next) {
         try {
 
             const user = req.body.user;
-            console.log('Datos enviados del usuario:', user);
+            console.log(`Datos enviados del usuario: ${user}`);
 
             const files = req.files;
 
@@ -77,9 +75,44 @@ module.exports = {
             });
         }
     },
+    // FUNCION ACTULIZAR DATOS DEL USUARIO
+    async update(req, res, next) {
+        try {
+
+            const user = req.body.user;
+            console.log(`Datos enviados del usuario: ${user}`);
+
+            const files = req.files;
+
+            if (files && Array.isArray(files) && files.length > 0) {
+                const pathImage = `image_${Date.now()}`; // NOMBRE DEL ARCHIVO
+                const url = await storage(files[0], pathImage);
+
+                if (url != undefined && url != null) {
+                    user.image = url;
+                }
+            }
+
+            await User.update(user);
+
+            return res.status(201).json({
+                success: true,
+                message: '¡Los datos del usuario han sido actualizados satisfactoriamente!'
+            });
+
+        }
+        catch (error) {
+            console.log(`Error: ${error}`);
+            return res.status(501).json({
+                success: false,
+                message: 'Hubo un error con la actualizacion de datos del usuario',
+                error: error.message
+            });
+        }
+    },
+    // FUNCION LOGIN
     async login(req, res, next) {
         try {
-            //valores para el login
             const email = req.body.email;
             const password = req.body.password;
 
@@ -94,8 +127,7 @@ module.exports = {
 
             if (User.isPasswordMatched(password, myUser.password)) {
                 const token = jwt.sign({ id: myUser.id, email: myUser.email }, keys.secretOrKey, {
-                    // expiresIn: (60*60*24) // 1 HORA
-                    // expiresIn: (60 * 3) // 2 MINUTO
+
                 });
                 const data = {
                     id: myUser.id,
@@ -108,6 +140,8 @@ module.exports = {
                     roles: myUser.roles
                 }
 
+                await User.updateToken(myUser.id, `JWT ${token}`);
+
                 console.log(`USUARIO ENVIADO ${data}`);
 
                 return res.status(201).json({
@@ -119,7 +153,7 @@ module.exports = {
             else {
                 return res.status(401).json({
                     success: false,
-                    message: 'La contraseña incorrecta'
+                    message: 'Contraseña incorrecta'
                 });
             }
 
@@ -129,6 +163,26 @@ module.exports = {
             return res.status(501).json({
                 success: false,
                 message: 'Error al momento de hacer login',
+                error: error.message
+            });
+        }
+    },
+    // FUNCION CERRAR SESION
+    async logout(req, res, next) {
+
+        try {
+            const id = req.body.id;
+            await User.updateToken(id, null);
+            return res.status(201).json({
+                success: true,
+                message: 'La sesion del usuario se ha cerrado correctamente'
+            });
+        }
+        catch (e) {
+            console.log(`Error: ${error}`);
+            return res.status(501).json({
+                success: false,
+                message: 'Error al momento de cerrar sesion',
                 error: error
             });
         }
