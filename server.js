@@ -7,6 +7,7 @@ const cors = require("cors");
 const multer = require('multer');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
+const passport = require('passport');
 
 // INICIALIZAR FIREBASE ADMIN
 admin.initializeApp({
@@ -19,23 +20,28 @@ const upload = multer({
 
 // RUTAS
 const users = require('./routes/usersRoutes')
+const categories = require('./routes/categoriesRoutes');
 
 const port = process.env.PORT || 3000;
 
 //configuraciones
-app.use(logger("dev"));
+app.use(logger('dev'));
 app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+app.use(express.urlencoded({
+    extended: true
+}));
 app.use(cors());
-app.disable("x-powered-by");
-app.set("port", port);
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
+
+app.disable('x-powered-by');
+
+app.set('port', port);
 
 //Llamando a las rutas
 users(app, upload);
+categories(app);
 
 app.listen(app.get('port'), () => {
   console.log(`Server ok on http://localhost:${app.get('port')}`);
