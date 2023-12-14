@@ -13,7 +13,7 @@ module.exports = {
             console.log(`Error ${error}`);    
             return res.status(501).json({
                 message: 'Hubo un error al tratar de obtener las categorias',
-                error: error,
+                error: error.message,
                 success: false
             })
         }
@@ -39,7 +39,7 @@ module.exports = {
             return res.status(501).json({
                 message: 'Hubo un error al crear la categoria',
                 success: false,
-                error: error
+                error: error.message
             });
         }
     }
