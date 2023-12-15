@@ -2,6 +2,7 @@ const db = require('../config/config');
 
 const Category = {};
 
+// CONSULTA RECIBIR TODAS LAS CATEGORIAS
 Category.getAll = () => {
 
     const sql = `
@@ -18,6 +19,7 @@ Category.getAll = () => {
     return db.manyOrNone(sql);
 }
 
+// CONSULTA CREAR CATEGORIA
 Category.create = (category) => {
     const sql = `
     INSERT INTO

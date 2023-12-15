@@ -39,8 +39,8 @@ module.exports = {
     // FUNCION REGISTRAR USUARIO CON FOTO
     async registerWithImage(req, res, next) {
         try {
-
-            const user = req.body.user;
+            
+            const user = JSON.parse(req.body.user);
             console.log(`Datos enviados del usuario: ${user}`);
 
             const files = req.files;
@@ -60,11 +60,11 @@ module.exports = {
 
             return res.status(201).json({
                 success: true,
-                message: '¡Registro exitoso! Inicia sesión para continuar.',
+                message: 'El registro se realizo correctamente, ahora inicia sesion',
                 data: data.id
             });
 
-        }
+        } 
         catch (error) {
             console.log(`Error: ${error}`);
             return res.status(501).json({
@@ -78,8 +78,8 @@ module.exports = {
     async update(req, res, next) {
         try {
 
-            const user = req.body.user;
-            console.log(`Datos enviados del usuario: ${user}`);
+            const user = JSON.parse(req.body.user);
+            console.log(`Datos enviados del usuario: ${JSON.stringify(user)}`);
 
             const files = req.files;
 
