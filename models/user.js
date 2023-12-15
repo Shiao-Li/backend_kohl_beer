@@ -27,7 +27,7 @@ User.findById = (id, callback) => {
     WHERE
         id = $1`;
 
-    return db.oneOrNone(sql, id);
+    return db.oneOrNone(sql, id).then(user => { callback(null, user); })
 }
 
 // CONSULTA BUSCAR POR ID
