@@ -21,6 +21,7 @@ const upload = multer({
 // RUTAS
 const users = require('./routes/usersRoutes')
 const categories = require('./routes/categoriesRoutes');
+const products = require('./routes/productsRoutes');
 
 const port = process.env.PORT || 3000;
 
@@ -42,6 +43,7 @@ app.set('port', port);
 //Llamando a las rutas
 users(app, upload);
 categories(app);
+products(app, upload);
 
 app.listen(app.get('port'), () => {
   console.log(`Server ok on http://localhost:${app.get('port')}`);
