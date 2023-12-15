@@ -11,7 +11,7 @@ const storage = new Storage({
     keyFilename: '../serviceAccountKey.json'
 });
 
-const bucket = storage.bucket("gs://app-kohl.appspot.com/"); 
+const bucket = storage.bucket("gs://app-kohl.appspot.com/");
 
 /**
  * Subir el archivo a Firebase Storage
@@ -19,7 +19,7 @@ const bucket = storage.bucket("gs://app-kohl.appspot.com/");
  */
 module.exports = (file, pathImage, deletePathImage) => {
     return new Promise((resolve, reject) => {
-        
+
         console.log('delete path', deletePathImage)
         if (deletePathImage) {
             if (deletePathImage != null || deletePathImage != undefined) {
@@ -30,18 +30,16 @@ module.exports = (file, pathImage, deletePathImage) => {
                 fileDelete.delete().then((imageDelete) => {
                     console.log('se borro la imagen con exito');
                 })
-                .catch(err => {
-                    console.log('Failed to remove photo, error:', err);
-                });
+                    .catch(err => {
+                        console.log('Failed to remove photo, error:', err);
+                    });
             }
         }
 
         if (pathImage) {
             if (pathImage != null || pathImage != undefined) {
-
                 let fileUpload = bucket.file(`${pathImage}`);
-                let stream = fileUpload.createWriteStream();
-                const blobStream = stream.pipe(fileUpload.createWriteStream({
+                const blobStream = fileUpload.createWriteStream({
                     metadata: {
                         contentType: 'image/png',
                         metadata: {
@@ -49,16 +47,14 @@ module.exports = (file, pathImage, deletePathImage) => {
                         }
                     },
                     resumable: false
-
-                }));
+                });
 
                 blobStream.on('error', (error) => {
-                    console.log('Error al subir archivo a firebase', error);
-                    reject('Something is wrong! Unable to upload at the moment.');
+                    console.log('Error al subir archivo a Firebase', error);
+                    reject('¡Algo salió mal! No se pudo subir en este momento.');
                 });
 
                 blobStream.on('finish', () => {
-                    // The public URL can be used to directly access the file via HTTP.
                     const url = format(`https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${fileUpload.name}?alt=media&token=${uuid}`);
                     console.log('URL DE CLOUD STORAGE ', url);
                     resolve(url);
