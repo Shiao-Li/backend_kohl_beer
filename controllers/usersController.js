@@ -40,7 +40,8 @@ module.exports = {
     async registerWithImage(req, res, next) {
         try {
             
-            const user = JSON.parse(req.body.user);
+            // const user = JSON.parse(req.body.user);
+            const user = req.body.user;
             console.log(`Datos enviados del usuario: ${user}`);
 
             const files = req.files;
@@ -78,7 +79,8 @@ module.exports = {
     async update(req, res, next) {
         try {
 
-            const user = JSON.parse(req.body.user);
+            // const user = JSON.parse(req.body.user);
+            const user = req.body.user;
             console.log(`Datos enviados del usuario: ${JSON.stringify(user)}`);
 
             const files = req.files;

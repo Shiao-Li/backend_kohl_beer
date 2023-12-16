@@ -11,7 +11,7 @@ User.getAll = () => {
 }
 
 // CONSULTA BUSCAR POR ID USUARIO - TOKENS
-User.findById = (id, callback) => {
+User.findById = (id) => {
     const sql = `
     SELECT
         id,
@@ -27,8 +27,18 @@ User.findById = (id, callback) => {
     WHERE
         id = $1`;
 
-    return db.oneOrNone(sql, id).then(user => { callback(null, user); })
-}
+    return db.oneOrNone(sql, id)
+        .then(user => {
+            if (user) {
+                return user;
+            } else {
+                throw new Error("Usuario no encontrado");
+            }
+        })
+        .catch(error => {
+            throw new Error("Error al buscar usuario: " + error.message);
+        });
+};
 
 // CONSULTA BUSCAR POR ID
 User.findByUserId = (id) => { //falta
