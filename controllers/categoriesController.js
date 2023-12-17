@@ -2,6 +2,7 @@ const Category = require('../models/category');
 
 module.exports = {
 
+    // Funcion recibir las categorias
     async getAll(req, res, next) {
 
         try {
@@ -20,6 +21,7 @@ module.exports = {
 
     },
 
+    // Funcion crear una categoria
     async create(req, res, next) {
         try {
             const category = req.body;
