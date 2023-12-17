@@ -8,6 +8,7 @@ module.exports = {
     async create(req, res, next) {
 
         let product = JSON.parse(req.body.product);
+        // let product = req.body.product;
         console.log(`Producto ${JSON.stringify(product)}`);
 
         const files = req.files;
