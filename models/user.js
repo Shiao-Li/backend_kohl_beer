@@ -79,6 +79,35 @@ User.findByUserId = (id) => { //falta
     return db.oneOrNone(sql, id);
 }
 
+// CONSULTA LISTAR REPARTIDORES
+User.findDeliveryMen = () => {
+    const sql = `
+    SELECT
+        U.id,
+        U.email,
+        U.name,
+        U.lastname,
+        U.image,
+        U.phone,
+        U.password,
+        U.session_token,
+        U.notification_token
+    FROM
+        users AS U
+    INNER JOIN
+        user_has_roles AS UHR
+    ON 
+        UHR.id_user = U.id
+    INNER JOIN
+        roles AS R
+    ON
+        R.id = UHR.id_rol
+    WHERE
+        R.id = 3  
+    `;
+    return db.manyOrNone(sql);
+}
+
 // CONSULTA VALIDAR CORREO - LOGIN
 User.findByEmail = (email) => {
     const sql = `
