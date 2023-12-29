@@ -8,6 +8,10 @@ const multer = require('multer');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
 const passport = require('passport');
+const io = require('socket.io')(server);
+
+// SOCKETS
+const orderDeliverySocket = require('./sockets/orders_delivery_socket');
 
 // INICIALIZAR FIREBASE ADMIN
 admin.initializeApp({
@@ -31,7 +35,7 @@ const port = process.env.PORT || 3000;
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({
-    extended: true
+  extended: true
 }));
 app.use(cors());
 app.use(passport.initialize());
@@ -41,6 +45,9 @@ require('./config/passport')(passport);
 app.disable('x-powered-by');
 
 app.set('port', port);
+
+// LLAMAR A LOS SOCKETS
+orderDeliverySocket(io);
 
 //Llamando a las rutas
 users(app, upload);

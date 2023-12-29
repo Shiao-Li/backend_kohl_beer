@@ -22,4 +22,7 @@ module.exports = (app) => {
 
     // Actualizar estado -> ENTREGADO
     app.put('/api/orders/updateToDelivered', passport.authenticate('jwt', {session: false}), OrdersController.updateToDelivered);
+
+    // Actualizar ubiacion en tiempo real
+    app.put('/api/orders/updateLatLng', passport.authenticate('jwt', {session: false}), OrdersController.updateLatLng);
 }
