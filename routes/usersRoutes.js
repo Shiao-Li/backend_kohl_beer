@@ -23,4 +23,10 @@ module.exports = (app, upload) => {
 
     // Listar reartidores
     app.get('/api/users/findDeliveryMen', passport.authenticate('jwt', {session: false}), UsersController.findDeliveryMen);
+
+    // Actualizar token notificaciones push de usuario
+    app.put('/api/users/updateNotificationToken', UsersController.updateNotificationToken)
+
+    // Tokens notifiaciones de administradores
+    app.get('/api/users/getAdminsNotificationTokens', passport.authenticate('jwt', {session: false}), UsersController.getAdminsNotificationTokens);
 }
