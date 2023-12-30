@@ -51,6 +51,28 @@ module.exports = {
             });
         }
     },
+    // FUNCION NOTIFICACIONES A VARIOS USUARIOS ADMINISTRADORES
+    async getAdminsNotificationTokens(req, res, next) {
+        try {
+            const data = await User.getAdminsNotificationTokens();    
+            let tokens = [];
+
+
+            data.forEach(d => {
+                tokens.push(d.notification_token);
+            });
+
+            console.log('Tokens de admin:', tokens);
+            return res.status(201).json(tokens);
+        } 
+        catch (error) {
+            console.log(`Error: ${error}`);
+            return res.status(501).json({
+                success: false,
+                message: 'Error al obtener los repartidores'
+            });
+        }
+    },
     // FUNCION REGISTRAR USUARIO CON FOTO
     async registerWithImage(req, res, next) {
         try {
@@ -123,6 +145,30 @@ module.exports = {
                 success: false,
                 message: 'Hubo un error con la actualizacion de datos del usuario',
                 error: error.message
+            });
+        }
+    },
+    // FUNCION TOKEN DE NOTIFIACIONES PUSH DE USUARIOS
+    async updateNotificationToken(req, res, next) {
+        try {
+            
+            const body = req.body;
+            console.log('Datos enviados del usuario: ', body);
+
+            await User.updateNotificationToken(body.id, body.notification_token);
+
+            return res.status(201).json({
+                success: true,
+                message: 'El token de notificaciones se ha almacenado correctamente'
+            });
+
+        } 
+        catch (error) {
+            console.log(`Error: ${error}`);
+            return res.status(501).json({
+                success: false,
+                message: 'Hubo un error con la actualizacion de datos del usuario',
+                error: error
             });
         }
     },

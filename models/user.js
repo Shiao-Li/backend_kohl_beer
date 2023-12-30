@@ -120,6 +120,7 @@ User.findByEmail = (email) => {
         U.phone,
         U.password,
         U.session_token,
+        U.notification_token,
         json_agg(
             json_build_object(
                 'id', R.id,
@@ -144,6 +145,26 @@ User.findByEmail = (email) => {
         U.id
     `
     return db.oneOrNone(sql, email);
+}
+// CONSULTA NOTIFICACIONES A VARIOS USUARIOS ADMINISTRADORES
+User.getAdminsNotificationTokens = () => {
+    const sql = `
+    SELECT
+        U.notification_token
+    FROM 
+        users AS U
+    INNER JOIN
+        user_has_roles AS UHR
+    ON
+        UHR.id_user = U.id
+    INNER JOIN
+        roles AS R
+    ON
+        R.id = UHR.id_rol
+    WHERE
+        R.id = 2
+    `
+    return db.manyOrNone(sql);
 }
 
 // CONSULTA CREAR NUEVO USUARIO
@@ -207,6 +228,23 @@ User.updateToken = (id, token) => { //falta
         users
     SET
         session_token = $2
+    WHERE
+        id = $1
+    `;
+
+    return db.none(sql, [
+        id,
+        token
+    ]);
+}
+
+// CONSULTA TOKEN DE NOTIFIACIONES PUSH DE USUARIOS
+User.updateNotificationToken = (id, token) => {
+    const sql = `
+    UPDATE
+        users
+    SET
+        notification_token = $2
     WHERE
         id = $1
     `;
