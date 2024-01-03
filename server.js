@@ -8,7 +8,12 @@ const multer = require('multer');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
 const passport = require('passport');
-const io = require('socket.io')(server);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST']
+  }
+});
 
 // SOCKETS
 const orderDeliverySocket = require('./sockets/orders_delivery_socket');
@@ -16,14 +21,14 @@ const orderDeliverySocket = require('./sockets/orders_delivery_socket');
 // INICIALIZAR FIREBASE ADMIN
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
-})
+});
 
 const upload = multer({
   storage: multer.memoryStorage()
-})
+});
 
 // RUTAS
-const users = require('./routes/usersRoutes')
+const users = require('./routes/usersRoutes');
 const categories = require('./routes/categoriesRoutes');
 const products = require('./routes/productsRoutes');
 const address = require('./routes/addressRoutes');
@@ -43,7 +48,6 @@ app.use(passport.session());
 require('./config/passport')(passport);
 
 app.disable('x-powered-by');
-
 app.set('port', port);
 
 // LLAMAR A LOS SOCKETS
@@ -56,17 +60,22 @@ products(app, upload);
 address(app);
 orders(app);
 
-app.listen(app.get('port'), () => {
-  console.log(`Server ok on http://localhost:${app.get('port')}`);
+// Manejador de errores
+app.use((req, res, next) => {
+  res.status(404).send('Not Found');
 });
 
-//error handler
 app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(err.status || 500).send(err.stack);
+  console.error(err.stack);
+  res.status(500).send('Server Error');
+});
+
+// Arrancar el servidor
+server.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
 });
 
 module.exports = {
   app: app,
   server: server
-}
+};
