@@ -7,7 +7,8 @@
     "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
   },
   "scripts": {
-    "start": "node --watch server.js"
+    "start": "node --watch server.js",
+    "test": "jest --runInBand"
   },
   "keywords": [
     "flutter",
@@ -32,5 +33,9 @@
     "pg-promise": "^11.5.4",
     "punycode": "^2.3.1",
     "socket.io": "^2.4.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
   }
 }
