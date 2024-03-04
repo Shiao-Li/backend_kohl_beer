@@ -50,8 +50,8 @@ module.exports = {
         let inserts = 0;
         
         if (files.length === 0) {
-            return res.status(501).json({
-                message: 'Error al registrar el producto no tiene imagen',
+            return res.status(201).json({
+                message: 'El producto se ha registrado correctamente',
                 success: false
             });
         }
