@@ -42,6 +42,7 @@ module.exports = {
     async create(req, res, next) {
 
         let product = JSON.parse(req.body.product);
+        // let product = req.body;
         console.log(`Producto ${JSON.stringify(product)}`);
 
         const files = req.files;
@@ -49,8 +50,8 @@ module.exports = {
         let inserts = 0;
         
         if (files.length === 0) {
-            return res.status(201).json({
-                message: 'El producto se ha registrado correctamente',
+            return res.status(501).json({
+                message: 'No se pudo registrar',
                 success: false
             });
         }
